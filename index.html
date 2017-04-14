@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+
+function draw4x4(ctx,n,dx,dy) {
+	ctx.fillStyle = "rgb(128,40,20)";
+	for(var y=0; y<4; y++) {
+		for(var x=0; x<4; x++) {
+			if(n&1==1) {
+				ctx.fillRect(dx+x,dy+y,1,1);
+			}
+			n >>= 1;
+		}
+	}
+}
+
+function generateCells(sta,end) {
+	var box = document.createElement('div');
+	box.classList.add('cellbox');
+	for(var i=sta; i<end; i++) {
+		var elem = document.getElementById('template');
+		elem = elem.cloneNode(true);
+		elem.removeAttribute('id');
+		var canvas = elem.getElementsByClassName('dots')[0];
+		var ctx = canvas.getContext('2d');
+		elem.getElementsByClassName('title')[0].innerText = i;
+		draw4x4(ctx,i,0,0);
+		box.appendChild(elem);
+	}
+	document.body.appendChild(box);
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+	const step = 256;
+	var k = 0;
+	var run = function() {
+		setTimeout(function(){
+			generateCells(k,k+step);
+			k=k+step;
+			if (k<65536) run();
+		},0);
+	};
+	run();
+
+});
+</script>
+
+<style>
+* {
+	margin:0;
+	padding:0;
+	box-sizing:border-box;
+}
+body {
+	padding:16px;
+	overflow-y: scroll;
+	font-family: 'Courier New';
+}
+
+.cellbox {
+	position:relative;
+	margin:0 auto;
+	width:672px;
+	clear:both;
+}
+
+.cell { 
+	float:left; 
+	margin:2px;
+}
+
+.cell .title {
+	text-align:center;
+	font-size:8px;
+}
+#template {
+	display: none;
+}
+canvas.dots {
+	border:1px solid black;
+	box-sizing:content-box;
+	image-rendering: pixelated;
+	padding:2px;
+	width:32px;
+	height:32px;
+}
+h1 {
+	text-align:center;
+	left:0;right:0;
+	margin:2em auto;
+	font-size:32px;
+}
+</style>
+</head>
+<body>
+<h1>All possible 4x4 dot icons</h1>
+<div class="cell" id="template">
+	<div class="title"></div>
+	<canvas class="dots" width="4" height="4"></canvas>
+</div>
+</html>
